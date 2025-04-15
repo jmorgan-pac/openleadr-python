@@ -47,7 +47,8 @@ class OpenADRClient:
     def __init__(self, ven_name, vtn_url, debug=False, cert=None, key=None,
                  passphrase=None, vtn_fingerprint=None, show_fingerprint=True, ca_file=None,
                  allow_jitter=True, ven_id=None, disable_signature=False, check_hostname=True,
-                 event_status_log_period=10, events_clean_up_period=300):
+                 event_status_log_period=10, events_clean_up_period=300,
+                 extra_headers=None):
         """
         Initializes a new OpenADR Client (Virtual End Node)
 
@@ -71,6 +72,7 @@ class OpenADRClient:
         :param bool check_hostname: Whether or not to check hostname
         :param int event_status_log_period: Setting the priod of status change logging
         :param int events_clean_up_period: Setting the priod of not relevant events clean up
+        :param dict extra_headers: Additional headers to include in the 
         """
 
         self.ven_name = ven_name
@@ -83,6 +85,7 @@ class OpenADRClient:
         self.check_hostname = check_hostname
         self.event_status_log_period = event_status_log_period
         self.events_clean_up_period = events_clean_up_period
+        self.extra_headers = extra_headers
 
         self.reports = []
         self.report_callbacks = {}              # Holds the callbacks for each specific report
@@ -726,6 +729,7 @@ class OpenADRClient:
         single = False
         requested_r_ids = []
 
+        print(response_payload)
         for report_request in response_payload['report_requests']:
             r_id = report_request['report_specifier']['specifier_payloads'][0]['r_id']
             if 'INVALID' in report_request['report_specifier']['report_specifier_id'] or (isinstance(r_id, str) and 'INVALID' in r_id):
@@ -1316,6 +1320,8 @@ class OpenADRClient:
     async def _ensure_client_session(self):
         if not self.client_session:
             headers = {'content-type': 'application/xml'}
+            if self.extra_headers is not None:
+                headers = headers | self.extra_headers
             client_timeout = aiohttp.ClientTimeout(sock_connect=5, sock_read=10)
             if self.cert_path:
                 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
