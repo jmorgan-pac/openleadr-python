@@ -303,6 +303,8 @@ class OpenADRClient:
         # Determine the correct item name, item description and unit
         if report_name == 'TELEMETRY_STATUS':
             item_base = None
+        elif report_name.startswith('x-') and measurement is None:
+            item_base = None
         elif isinstance(measurement, objects.Measurement):
             item_base = measurement
         elif isinstance(measurement, dict):
@@ -321,7 +323,7 @@ class OpenADRClient:
                                             unit=unit,
                                             scale=scale)
 
-        if report_name != 'TELEMETRY_STATUS' and scale is not None:
+        if report_name != 'TELEMETRY_STATUS' and scale is not None and item_base is not None:
             if item_base.scale is not None:
                 if scale in enums.SI_SCALE_CODE.values:
                     item_base.scale = scale
