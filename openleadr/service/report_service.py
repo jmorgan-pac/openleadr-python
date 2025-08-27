@@ -126,9 +126,28 @@ class ReportService(VTNService):
                 continue
             else:
                 logger.warning("Reports other than TELEMETRY_USAGE, TELEMETRY_STATUS, "
-                               "HISTORY_USAGE and HISTORY_GREENBUTTON are not yet supported. "
-                               f"Skipping report with name {report['report_name']}.")
-                report_requests.append(None)
+                               "HISTORY_USAGE and HISTORY_GREENBUTTON are not yet supported"
+                               "by openleadr. But we can try to handle "
+                               f"report with name {report['report_name']}.")
+                if mode == 'compact':
+                    results = [self.on_register_report(ven_id=payload['ven_id'],
+                                                       resource_id=rd.get('report_data_source', {}).get('resource_id'),
+                                                       measurement= rd.get('measurement', {}).get('description'),
+                                                       unit= rd.get('measurement', {}).get('unit'),
+                                                       scale=rd.get('measurement', {}).get('scale'),
+                                                       min_sampling_interval=rd['sampling_rate']['min_period'],
+                                                       max_sampling_interval=rd['sampling_rate']['max_period'])
+                               for rd in report['report_descriptions']]
+                    results = await utils.gather_if_required(results)
+                    # for rd in report['report_descriptions']:
+
+                    #     min_sampling_interval = rd['sampling_rate']['min_period']
+                    #     max_sampling_interval=rd['sampling_rate']['max_period']
+                    #     resource_id = rd.get('report_data_source', {}).get('resource_id')
+                    #     measurement = rd.get('measurement', {}).get('description')
+                    #     unit = rd.get('measurement', {}).get('unit')
+                    #     scale = rd.get('measurement', {}).get('description')
+                # report_requests.append(None)
                 continue
 
             # Perform some rudimentary checks on the returned type
