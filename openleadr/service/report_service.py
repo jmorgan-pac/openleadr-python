@@ -148,7 +148,7 @@ class ReportService(VTNService):
                     #     unit = rd.get('measurement', {}).get('unit')
                     #     scale = rd.get('measurement', {}).get('description')
                 # report_requests.append(None)
-                continue
+                # continue
 
             # Perform some rudimentary checks on the returned type
             if results is not None:
