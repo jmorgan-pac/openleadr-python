@@ -139,6 +139,8 @@ class ReportService(VTNService):
                                                        max_sampling_interval=rd['sampling_rate']['max_period'])
                                for rd in report['report_descriptions']]
                     results = await utils.gather_if_required(results)
+                elif mode == 'full':
+                    results = await utils.await_if_required(self.on_register_report(report))
                     # for rd in report['report_descriptions']:
 
                     #     min_sampling_interval = rd['sampling_rate']['min_period']

@@ -896,7 +896,7 @@ class OpenADRClient:
                 try:
                     report_callback = self.report_callbacks[(report_specifier_id, r_id)]
                     result = await utils.await_if_required(report_callback())
-                    if report.report_name == enums.REPORT_NAME.TELEMETRY_STATUS or isinstance(result, (tuple, list)):   # recognize custom report type that implements status under a different name
+                    if report.report_name == enums.REPORT_NAME.TELEMETRY_STATUS or isinstance(result, tuple):   # recognize custom report type that implements status under a different name
                         # Verify that the callback returned a tuple
                         if not isinstance(result, (tuple, list)):
                             logger.error("The report callback for the TELEMETRY_STATUS report "
