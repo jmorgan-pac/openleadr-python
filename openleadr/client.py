@@ -946,6 +946,10 @@ class OpenADRClient:
                                 intervals.append(objects.ReportInterval(dtstart=dt,
                                                                         report_payload=report_payload,
                                                                         duration=granularity))
+                            elif report.duration.total_seconds() > 0:
+                                intervals.append(objects.ReportInterval(dtstart=dt,
+                                                                        report_payload=report_payload,
+                                                                        duration=report.duration))
                             else:
                                 intervals.append(objects.ReportInterval(dtstart=dt,
                                                                         report_payload=report_payload))
