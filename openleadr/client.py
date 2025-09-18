@@ -301,7 +301,7 @@ class OpenADRClient:
                                 "with data_collection_mode 'full'.")
 
         # Determine the correct item name, item description and unit
-        if report_name == 'TELEMETRY_STATUS':
+        if 'TELEMETRY_STATUS' in report_name:
             item_base = None
         elif report_name.startswith('x-') and measurement is None:
             item_base = None
